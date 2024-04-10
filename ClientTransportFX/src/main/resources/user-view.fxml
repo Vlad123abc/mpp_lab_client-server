@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.UserController">
+   <children>
+      <Label layoutX="40.0" layoutY="40.0" text="Curse:" />
+      <TableView fx:id="cursaTableView" layoutX="40.0" layoutY="80.0" prefHeight="200.0" prefWidth="400.0">
+        <columns>
+          <TableColumn fx:id="destinatieTableColumn" prefWidth="100.0" text="Destinatie" />
+          <TableColumn fx:id="plecareTableColumn" prefWidth="200.0" text="Plecare" />
+            <TableColumn fx:id="locuriTableColumn" prefWidth="100.0" text="Nr locuri" />
+        </columns>
+      </TableView>
+      <Label layoutX="43.0" layoutY="310.0" text="Cautare:" />
+      <Label layoutX="43.0" layoutY="347.0" text="Destinatie:" />
+      <TextField fx:id="destinatie" layoutX="131.0" layoutY="343.0" />
+      <Label layoutX="43.0" layoutY="382.0" text="Data:" />
+      <DatePicker fx:id="datePicker" layoutX="131.0" layoutY="382.0" />
+      <Label layoutX="330.0" layoutY="382.0" text="Ora:" />
+      <TextField fx:id="ora" layoutX="380.0" layoutY="382.0" />
+      <Button layoutX="40.0" layoutY="425.0" mnemonicParsing="false" onAction="#onCauta" text="Cauta" />
+      <Label layoutX="40.0" layoutY="480.0" text="Locuri:" />
+      <TableView fx:id="locCursaTableView" layoutX="40.0" layoutY="520.0" prefHeight="200.0" prefWidth="150.0">
+        <columns>
+          <TableColumn fx:id="locTableColumn" prefWidth="35.0" text="Loc" />
+          <TableColumn fx:id="locClientTableColumn" prefWidth="115.0" text="Client" />
+        </columns>
+      </TableView>
+      <Label layoutX="300.0" layoutY="480.0" text="Rezervare:" />
+      <Label layoutX="300.0" layoutY="520.0" text="Client:" />
+       <TextField fx:id="nume_rezervare" layoutX="380.0" layoutY="517.0" />
+      <Label layoutX="300.0" layoutY="550.0" text="Nr locuri:" />
+      <Spinner fx:id="nr_locuri_rezervare" layoutX="380.0" layoutY="546.0" />
+      <Button layoutX="300.0" layoutY="580.0" mnemonicParsing="false" text="Rezerva" onAction="#onRezerva"/>
+      <Button fx:id="logoutButton" layoutX="500.0" layoutY="750.0" mnemonicParsing="false" text="Logout" onAction="#onLogout"/>
+   </children>
+</AnchorPane>

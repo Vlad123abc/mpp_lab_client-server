@@ -1,0 +1,9 @@
+rootProject.name = 'mpp_lab_transport'
+include 'DomainTransport'
+include 'RepositoryTransport'
+include 'ServiceTransport'
+include 'ServerTransport'
+include 'NetworkTransport'
+include 'ClientTransport'
+include 'ClientTransportFX'
+
