@@ -62,6 +62,7 @@ public class StartRpcClientFX extends Application
         UserController userController = loader1.getController();
 
         loginController.setUserController(userController);
+        loginController.setParent(root2);
 
         primaryStage.setTitle("MPP Transport");
         primaryStage.setScene(new Scene(root, 400, 300));

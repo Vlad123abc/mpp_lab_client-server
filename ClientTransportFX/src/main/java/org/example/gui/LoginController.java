@@ -20,6 +20,7 @@ public class LoginController
     private IService service;
 
     private UserController userController;
+    private Parent parent;
 
     @FXML
     private TextField textField;
@@ -38,6 +39,11 @@ public class LoginController
     public void setUserController(UserController uc)
     {
         this.userController = uc;
+    }
+
+    public void setParent(Parent p)
+    {
+        this.parent = p;
     }
 
     public void onLogin(ActionEvent actionEvent) throws Exception
@@ -60,17 +66,20 @@ public class LoginController
             User user = this.service.getUserByUsername(username);
 
             // open user page
-            FXMLLoader fxmlLoader = new FXMLLoader(StartRpcClientFX.class.getResource("user-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 600, 800);
-
-            UserController userController = fxmlLoader.getController();
-            userController.init_controller(this.service, user);
+//            FXMLLoader fxmlLoader = new FXMLLoader(StartRpcClientFX.class.getResource("user-view.fxml"));
+//            Scene scene = new Scene(fxmlLoader.load(), 600, 800);
+//
+//            UserController userController = fxmlLoader.getController();
+//            userController.init_controller(this.service, user);
+            Scene scene = new Scene(this.parent, 600, 800);
+            this.userController.init_controller(this.service, user);
 
             Stage stage = new Stage();
             stage.setTitle(username);
             stage.setScene(scene);
             stage.show();
-        } else
+        }
+        else
         {
             this.incorrectLabel.setVisible(true);
             this.passwordField.clear();

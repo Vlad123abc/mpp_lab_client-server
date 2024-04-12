@@ -78,8 +78,8 @@ public class ClientWorker implements Runnable, IObserver
             User user = (User) request.getData();
             try
             {
-                server.login(user.getUsername(), user.getPassword(), this);
-                return okResponse;
+                Boolean ok = server.login(user.getUsername(), user.getPassword(), this);
+                return new Response.Builder().type(ResponseType.LOGIN).data(ok).build();
             } catch (Exception e)
             {
                 connected = false;

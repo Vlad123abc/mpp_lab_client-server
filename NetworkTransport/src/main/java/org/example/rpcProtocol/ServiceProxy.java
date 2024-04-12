@@ -254,12 +254,14 @@ public class ServiceProxy implements IService
                     if (isUpdate((Response) response))
                     {
                         handleUpdate((Response) response);
-                    } else
+                    }
+                    else
                     {
                         try
                         {
                             qresponses.put((Response) response);
-                        } catch (InterruptedException e)
+                        }
+                        catch (InterruptedException e)
                         {
                             e.printStackTrace();
                         }
