@@ -1,6 +1,8 @@
 package org.example;
 
-public class LocCursa
+import java.io.Serializable;
+
+public class LocCursa implements Serializable
 {
     private Integer nr;
     private String client;

@@ -151,7 +151,14 @@ public class UserController implements Initializable, IObserver
     @Override
     public void initialize(URL location, ResourceBundle resources)
     {
+        destinatieTableColumn.setCellValueFactory(new PropertyValueFactory<>("destinatie"));
+        plecareTableColumn.setCellValueFactory(new PropertyValueFactory<>("plecare"));
+        locuriTableColumn.setCellValueFactory(new PropertyValueFactory<>("nr_locuri"));
+        cursaTableView.setItems(modelCurse);
 
+        locTableColumn.setCellValueFactory(new PropertyValueFactory<>("nr"));
+        locClientTableColumn.setCellValueFactory(new PropertyValueFactory<>("client"));
+        locCursaTableView.setItems(modelLocCurse);
     }
 
     @Override
