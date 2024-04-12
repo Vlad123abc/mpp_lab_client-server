@@ -120,7 +120,7 @@ public class ServiceProxy implements IService
         Request request = new Request.Builder().type(RequestType.LOGIN).data(user).build();
         sendRequest(request);
         Response response = readResponse();
-        if (response.getType() == ResponseType.OK)
+        if (response.getType() == ResponseType.OK) //aci
         {
             this.client = client;
             return true;

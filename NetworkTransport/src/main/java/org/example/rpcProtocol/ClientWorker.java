@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 
 public class ClientWorker implements Runnable, IObserver
 {
@@ -79,6 +80,8 @@ public class ClientWorker implements Runnable, IObserver
             try
             {
                 Boolean ok = server.login(user.getUsername(), user.getPassword(), this);
+                if (ok == true)
+                    return okResponse;
                 return new Response.Builder().type(ResponseType.LOGIN).data(ok).build();
             } catch (Exception e)
             {
@@ -117,8 +120,8 @@ public class ClientWorker implements Runnable, IObserver
             System.out.println("SendGetAllCurseRequest ...");
             try
             {
-                server.getAllCurse();
-                return okResponse;
+                List<Cursa> curse = server.getAllCurse();
+                return new Response.Builder().type(ResponseType.GET_ALL_CURSE).data(curse).build();
             } catch (Exception e)
             {
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
@@ -130,8 +133,8 @@ public class ClientWorker implements Runnable, IObserver
             Long id_cursa = (Long) request.getData();
             try
             {
-                server.genereaza_lista_locuri(id_cursa);
-                return okResponse;
+                List<LocCursa> locuri = server.genereaza_lista_locuri(id_cursa);
+                return new Response.Builder().type(ResponseType.GENEREAZA_LISTA_LOCURI).data(locuri).build();
             } catch (Exception e)
             {
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
@@ -143,8 +146,8 @@ public class ClientWorker implements Runnable, IObserver
             Cursa cursa = (Cursa) request.getData();
             try
             {
-                server.cauta_cursa(cursa.getDestinatie(), cursa.getPlecare());
-                return okResponse;
+                Cursa cursa1 = server.cauta_cursa(cursa.getDestinatie(), cursa.getPlecare());
+                return new Response.Builder().type(ResponseType.CAUTA_CURSA).data(cursa1).build();
             } catch (Exception e)
             {
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
@@ -156,8 +159,8 @@ public class ClientWorker implements Runnable, IObserver
             Cursa cursa = (Cursa) request.getData();
             try
             {
-                server.getNrLocuriLibereCursa(cursa);
-                return okResponse;
+                Integer nr = server.getNrLocuriLibereCursa(cursa);
+                return new Response.Builder().type(ResponseType.GET_NR_LOCURI_LIBERE_CURSA).data(nr).build();
             } catch (Exception e)
             {
                 return new Response.Builder().type(ResponseType.ERROR).data(e.getMessage()).build();
