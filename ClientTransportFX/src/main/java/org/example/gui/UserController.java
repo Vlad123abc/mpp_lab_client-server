@@ -137,6 +137,7 @@ public class UserController implements Initializable, IObserver
                 else
                 {
                     this.service.rezerva(client, nr_locuri, cursa.getId());
+                    initModel();
                     MessageWindow.showMessage(null, Alert.AlertType.CONFIRMATION, "Confirmation", "Rezervarea a fost facuta cu succes!");
                 }
             }
