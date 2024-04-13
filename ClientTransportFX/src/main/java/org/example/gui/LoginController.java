@@ -11,7 +11,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.example.IService;
-import org.example.StartRpcClientFX;
 import org.example.User;
 
 
@@ -20,7 +19,6 @@ public class LoginController
     private IService service;
 
     private UserController userController;
-    private Parent parent;
 
     @FXML
     private TextField textField;
@@ -34,16 +32,6 @@ public class LoginController
     {
         this.service = service;
         incorrectLabel.setVisible(false);
-    }
-
-    public void setUserController(UserController uc)
-    {
-        this.userController = uc;
-    }
-
-    public void setParent(Parent p)
-    {
-        this.parent = p;
     }
 
     public void onLogin(ActionEvent actionEvent) throws Exception
@@ -65,14 +53,11 @@ public class LoginController
 
             User user = this.service.getUserByUsername(username);
 
-            // open user page
-//            FXMLLoader fxmlLoader = new FXMLLoader(StartRpcClientFX.class.getResource("user-view.fxml"));
-//            Scene scene = new Scene(fxmlLoader.load(), 600, 800);
-//
-//            UserController userController = fxmlLoader.getController();
-//            userController.init_controller(this.service, user);
-            Scene scene = new Scene(this.parent, 600, 800);
-            this.userController.init_controller(this.service, user);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("user-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 600, 800);
+
+            UserController userController = fxmlLoader.getController();
+            userController.init_controller(this.service, user);
 
             Stage stage = new Stage();
             stage.setTitle(username);

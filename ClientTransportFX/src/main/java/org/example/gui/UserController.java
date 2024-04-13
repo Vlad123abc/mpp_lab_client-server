@@ -1,5 +1,6 @@
 package org.example.gui;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -164,6 +165,15 @@ public class UserController implements Initializable, IObserver
     @Override
     public void rezervare(Rezervare rezervare) throws Exception
     {
-
+        Platform.runLater(() ->
+        {
+            try
+            {
+                this.initModel();
+            } catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

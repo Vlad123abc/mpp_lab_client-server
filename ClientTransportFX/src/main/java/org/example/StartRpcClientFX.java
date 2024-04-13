@@ -51,21 +51,14 @@ public class StartRpcClientFX extends Application
 
         IService server = new ServiceProxy(serverIP, serverPort);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("login-view.fxml"));
-        Parent root=loader.load();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("login-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 400, 300);
 
-        LoginController loginController = loader.getController();
+        LoginController loginController = fxmlLoader.getController();
         loginController.initController(server);
 
-        FXMLLoader loader1 = new FXMLLoader(getClass().getClassLoader().getResource("user-view.fxml"));
-        Parent root2 = loader1.load();
-        UserController userController = loader1.getController();
-
-        loginController.setUserController(userController);
-        loginController.setParent(root2);
-
-        primaryStage.setTitle("MPP Transport");
-        primaryStage.setScene(new Scene(root, 400, 300));
+        primaryStage.setTitle("Login");
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 }

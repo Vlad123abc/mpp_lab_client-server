@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Service implements IService
 {
@@ -25,7 +27,7 @@ public class Service implements IService
         this.cursaRepository = cursaRepository;
         this.rezervareRepository = rezervareRepository;
 
-        loggedClients=new ConcurrentHashMap<>();
+        loggedClients = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -34,7 +36,10 @@ public class Service implements IService
         for (User user : this.utilizatorRepository.getAll())
         {
             if (Objects.equals(user.getUsername(), username) && Objects.equals(user.getPassword(), password))
+            {
+                loggedClients.put(user.getId().toString(), client);
                 return true;
+            }
         }
         return false;
     }
@@ -98,7 +103,7 @@ public class Service implements IService
         return 18 - count;
     }
 
-    public void rezerva(String nume, Integer nr, Long id_cursa)
+    public void rezerva(String nume, Integer nr, Long id_cursa) throws Exception
     {
         Rezervare rezervare = new Rezervare(nume, nr, id_cursa);
         this.rezervareRepository.save(rezervare);
@@ -106,11 +111,43 @@ public class Service implements IService
         Cursa cursa = this.getCursaById(id_cursa);
         Integer nr_locuri = cursa.getNr_locuri();
         cursa.setNr_locuri(nr_locuri - nr);
-        this.cursaRepository.update(id_cursa, cursa);
+        Boolean updated = this.cursaRepository.update(id_cursa, cursa);
+
+        if (updated)
+        {
+            this.notifyRezervare(rezervare);
+        }
     }
 
     private Cursa getCursaById(Long id)
     {
         return this.cursaRepository.getById(id);
+    }
+
+    private final int defaultThreadsNo = 5;
+    private void notifyRezervare(Rezervare rezervare) throws Exception
+    {
+        Iterable<User> users = this.utilizatorRepository.getAll();
+
+        ExecutorService executor= Executors.newFixedThreadPool(defaultThreadsNo);
+        for(User us : users)
+        {
+            IObserver chatClient = loggedClients.get(us.getId().toString());
+            if (chatClient != null)
+            {
+                executor.execute(() ->
+                {
+                    try
+                    {
+                        chatClient.rezervare(rezervare);
+                    } catch (Exception e)
+                    {
+                        System.err.println("Error notifying friend " + e);
+                    }
+                });
+            }
+        }
+
+        executor.shutdown();
     }
 }
