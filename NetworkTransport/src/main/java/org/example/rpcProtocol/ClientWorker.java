@@ -15,6 +15,7 @@ public class ClientWorker implements Runnable, IObserver
     private ObjectInputStream input;
     private ObjectOutputStream output;
     private volatile boolean connected;
+    private User user;
 
     public ClientWorker(IService server, Socket connection)
     {
@@ -77,6 +78,7 @@ public class ClientWorker implements Runnable, IObserver
         {
             System.out.println("Login request ..." + request.getType());
             User user = (User) request.getData();
+            this.user = user;
             try
             {
                 Boolean ok = server.login(user.getUsername(), user.getPassword(), this);
@@ -91,7 +93,7 @@ public class ClientWorker implements Runnable, IObserver
         }
         if (request.getType() == RequestType.REZERVARE)
         {
-            System.out.println("SendRezervareRequest ...");
+            System.out.println(user.getUsername() + ": SendRezervareRequest ...");
             Rezervare rezervare = (Rezervare) request.getData();
             try
             {
@@ -104,7 +106,7 @@ public class ClientWorker implements Runnable, IObserver
         }
         if (request.getType() == RequestType.GET_USER_BY_USERNAME)
         {
-            System.out.println("SendGetUserByUsernameRequest ...");
+            System.out.println(user.getUsername() + ": SendGetUserByUsernameRequest ...");
             String username = (String) request.getData();
             try
             {
@@ -117,7 +119,7 @@ public class ClientWorker implements Runnable, IObserver
         }
         if (request.getType() == RequestType.GET_ALL_CURSE)
         {
-            System.out.println("SendGetAllCurseRequest ...");
+            System.out.println(user.getUsername() + ": SendGetAllCurseRequest ...");
             try
             {
                 List<Cursa> curse = server.getAllCurse();
@@ -129,7 +131,7 @@ public class ClientWorker implements Runnable, IObserver
         }
         if (request.getType() == RequestType.GENEREAZA_LISTA_LOCURI)
         {
-            System.out.println("SendGenereazaListaLocuriRequest ...");
+            System.out.println(user.getUsername() + ": SendGenereazaListaLocuriRequest ...");
             Long id_cursa = (Long) request.getData();
             try
             {
@@ -142,7 +144,7 @@ public class ClientWorker implements Runnable, IObserver
         }
         if (request.getType() == RequestType.CAUTA_CURSA)
         {
-            System.out.println("SendCautaCursaRequest ...");
+            System.out.println(user.getUsername() + ": SendCautaCursaRequest ...");
             Cursa cursa = (Cursa) request.getData();
             try
             {
@@ -155,7 +157,7 @@ public class ClientWorker implements Runnable, IObserver
         }
         if (request.getType() == RequestType.GET_NR_LOCURI_LIBERE_CURSA)
         {
-            System.out.println("SendGetNrLocuriLibereCursaRequest ...");
+            System.out.println(user.getUsername() + ": SendGetNrLocuriLibereCursaRequest ...");
             Cursa cursa = (Cursa) request.getData();
             try
             {
@@ -172,7 +174,7 @@ public class ClientWorker implements Runnable, IObserver
 
     private void sendResponse(Response response) throws IOException
     {
-        System.out.println("sending response " + response);
+        System.out.println(user.getUsername() + ": sending response " + response);
         synchronized (output)
         {
             output.writeObject(response);

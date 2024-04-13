@@ -82,7 +82,8 @@ public class UserController implements Initializable, IObserver
 
     private void initModel() throws Exception
     {
-        modelCurse.setAll(this.service.getAllCurse());
+        var curses = this.service.getAllCurse();
+        modelCurse.setAll(curses);
     }
 
     public void onCauta(ActionEvent actionEvent) throws Exception
@@ -170,7 +171,8 @@ public class UserController implements Initializable, IObserver
         {
             try
             {
-                this.initModel();
+                var curses = this.service.getAllCurse();
+                modelCurse.setAll(curses);
             } catch (Exception e)
             {
                 throw new RuntimeException(e);
