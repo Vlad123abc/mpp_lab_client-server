@@ -44,17 +44,17 @@ public class Service implements IService
         return false;
     }
 
-    public User getUserByUsername(String username)
+    public synchronized User getUserByUsername(String username)
     {
         return this.utilizatorRepository.getByUsername(username);
     }
 
-    public List<Cursa> getAllCurse()
+    public synchronized List<Cursa> getAllCurse()
     {
         return this.cursaRepository.getAll();
     }
 
-    public List<LocCursa> genereaza_lista_locuri(Long id_cursa)
+    public synchronized List<LocCursa> genereaza_lista_locuri(Long id_cursa)
     {
         List<LocCursa> locuri = new ArrayList<>();
         Integer loc = 1;
@@ -79,7 +79,7 @@ public class Service implements IService
         return locuri;
     }
 
-    public Cursa cauta_cursa(String destinatie, Timestamp data)
+    public synchronized Cursa cauta_cursa(String destinatie, Timestamp data)
     {
         for (Cursa cursa : this.cursaRepository.getAll())
             if (Objects.equals(cursa.getDestinatie(), destinatie) && cursa.getPlecare().equals(data))
@@ -88,7 +88,7 @@ public class Service implements IService
         return null;
     }
 
-    public Integer getNrLocuriLibereCursa(Cursa cursa)
+    public synchronized Integer getNrLocuriLibereCursa(Cursa cursa)
     {
         Integer count = 0;
 
@@ -103,7 +103,7 @@ public class Service implements IService
         return 18 - count;
     }
 
-    public void rezerva(String nume, Integer nr, Long id_cursa) throws Exception
+    public synchronized void rezerva(String nume, Integer nr, Long id_cursa) throws Exception
     {
         Rezervare rezervare = new Rezervare(nume, nr, id_cursa);
         this.rezervareRepository.save(rezervare);
@@ -119,7 +119,7 @@ public class Service implements IService
         }
     }
 
-    private Cursa getCursaById(Long id)
+    private synchronized Cursa getCursaById(Long id)
     {
         return this.cursaRepository.getById(id);
     }
@@ -129,25 +129,40 @@ public class Service implements IService
     {
         Iterable<User> users = this.utilizatorRepository.getAll();
 
-        ExecutorService executor= Executors.newFixedThreadPool(defaultThreadsNo);
+//        ExecutorService executor= Executors.newFixedThreadPool(defaultThreadsNo);
+//        for(User us : users)
+//        {
+//            IObserver chatClient = loggedClients.get(us.getId().toString());
+//            if (chatClient != null)
+//            {
+//                executor.execute(() ->
+//                {
+//                    try
+//                    {
+//                        chatClient.rezervare(rezervare);
+//                    } catch (Exception e)
+//                    {
+//                        System.err.println("Error notifying friend " + e);
+//                    }
+//                });
+//            }
+//        }
+//
+//        executor.shutdown();
+
         for(User us : users)
         {
             IObserver chatClient = loggedClients.get(us.getId().toString());
             if (chatClient != null)
             {
-                executor.execute(() ->
+                try
                 {
-                    try
-                    {
-                        chatClient.rezervare(rezervare);
-                    } catch (Exception e)
-                    {
-                        System.err.println("Error notifying friend " + e);
-                    }
-                });
+                    chatClient.rezervare(rezervare);
+                } catch (Exception e)
+                {
+                    System.err.println("Error notifying friend " + e);
+                }
             }
         }
-
-        executor.shutdown();
     }
 }

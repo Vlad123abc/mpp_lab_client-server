@@ -34,12 +34,12 @@ public class ServiceProxy implements IService
 
     private void handleUpdate(Response response)
     {
-        if (response.getType() == ResponseType.NEW_REZERVARE)
+        if (response.getType() == ResponseType.REZERVARE)
         {
             Rezervare rezervare = (Rezervare) response.getData();
             try
             {
-                client.rezervare(rezervare);
+                client.rezervare(rezervare); //client is null
             } catch (Exception e)
             {
                 e.printStackTrace();
@@ -120,7 +120,7 @@ public class ServiceProxy implements IService
         Request request = new Request.Builder().type(RequestType.LOGIN).data(user).build();
         sendRequest(request);
         Response response = readResponse();
-        if (response.getType() == ResponseType.OK) //aci
+        if (response.getType() == ResponseType.OK)
         {
             this.client = client;
             return true;
@@ -238,9 +238,8 @@ public class ServiceProxy implements IService
 
     private boolean isUpdate(Response response)
     {
-        return response.getType() == ResponseType.NEW_REZERVARE;
+        return response.getType() == ResponseType.REZERVARE;
     }
-
     private class ReaderThread implements Runnable
     {
         public void run()

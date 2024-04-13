@@ -34,6 +34,11 @@ public class LoginController
         incorrectLabel.setVisible(false);
     }
 
+    public void setUserController(UserController userController)
+    {
+        this.userController = userController;
+    }
+
     public void onLogin(ActionEvent actionEvent) throws Exception
     {
         String username = this.textField.getText();

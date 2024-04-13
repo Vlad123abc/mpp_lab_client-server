@@ -166,15 +166,16 @@ public class UserController implements Initializable, IObserver
     @Override
     public void rezervare(Rezervare rezervare) throws Exception
     {
-        Platform.runLater(() ->
-        {
-            try
-            {
-                this.initModel();
-            } catch (Exception e)
-            {
-                throw new RuntimeException(e);
-            }
-        });
+//        Platform.runLater(() ->
+//        {
+//            try
+//            {
+//                this.initModel();
+//            } catch (Exception e)
+//            {
+//                throw new RuntimeException(e);
+//            }
+//        });
+        this.initModel();
     }
 }

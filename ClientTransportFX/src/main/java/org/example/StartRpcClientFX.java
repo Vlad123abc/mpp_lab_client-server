@@ -57,6 +57,10 @@ public class StartRpcClientFX extends Application
         LoginController loginController = fxmlLoader.getController();
         loginController.initController(server);
 
+        FXMLLoader fxmlLoaderUser = new FXMLLoader(getClass().getClassLoader().getResource("user-view.fxml"));
+        UserController userController = fxmlLoaderUser.getController();
+        loginController.setUserController(userController);
+
         primaryStage.setTitle("Login");
         primaryStage.setScene(scene);
         primaryStage.show();

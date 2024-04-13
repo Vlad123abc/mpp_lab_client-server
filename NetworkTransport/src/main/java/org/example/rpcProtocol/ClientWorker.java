@@ -183,7 +183,7 @@ public class ClientWorker implements Runnable, IObserver
     @Override
     public void rezervare(Rezervare rezervare) throws Exception
     {
-        Response resp = new Response.Builder().type(ResponseType.NEW_REZERVARE).data(rezervare).build();
+        Response resp = new Response.Builder().type(ResponseType.REZERVARE).data(rezervare).build();
         try
         {
             sendResponse(resp);
