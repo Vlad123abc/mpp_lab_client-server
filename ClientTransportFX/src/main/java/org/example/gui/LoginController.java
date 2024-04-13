@@ -49,21 +49,20 @@ public class LoginController
         if (password.isEmpty())
             MessageWindow.showMessage(null, Alert.AlertType.ERROR, "Error", "Completati Password!");
 
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("user-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 600, 800);
+
+        this.userController = fxmlLoader.getController();
+
+
         if (this.service.login(username, password, this.userController))
         {
             this.incorrectLabel.setVisible(false);
 
             this.textField.clear();
             this.passwordField.clear();
-
             User user = this.service.getUserByUsername(username);
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("user-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 600, 800);
-
-            UserController userController = fxmlLoader.getController();
             userController.init_controller(this.service, user);
-
             Stage stage = new Stage();
             stage.setTitle(username);
             stage.setScene(scene);
