@@ -52,7 +52,9 @@ public class ClientWorker implements Runnable, IObserver
         {
             try
             {
+                System.out.println("Going to read line. ");                
                 String request_in = reader.readLine();
+                System.out.println("Line received:" + request_in);                                
                 ObjectMapper mapper = new ObjectMapper();
                 Request request = mapper.readValue(request_in, Request.class);
                 
@@ -61,7 +63,7 @@ public class ClientWorker implements Runnable, IObserver
                 {
                     sendResponse(response);
                 }
-            } catch (IOException | ClassNotFoundException e)
+            } catch (IOException e)
             {
                 e.printStackTrace();
             }
@@ -91,7 +93,21 @@ public class ClientWorker implements Runnable, IObserver
         if (request.getType() == RequestType.LOGIN)
         {
             System.out.println("Login request ..." + request.getType());
-            User user = (User) request.getData();
+            System.out.println("Login request details: ..." + request.getData().getClass());
+
+            ObjectMapper mapper = new ObjectMapper();
+            User user = null;
+            try {
+                String login_data_string = mapper.writeValueAsString(request.getData());
+                System.out.println("Login data string: ..." + login_data_string);
+                
+                user = mapper.readValue(login_data_string, User.class);
+
+            }
+            catch (Exception e) {
+                System.out.println("error: " + e.toString());
+            }
+            
             this.user = user;
             try
             {

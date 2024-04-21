@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +31,7 @@ public class ServiceProxy implements IService
     private java.io.InputStream input;
     private java.io.OutputStream output;
     private java.io.BufferedReader reader;
-    private java.io.BufferedWriter writer;
+    private java.io.PrintWriter writer;
     private Socket connection;
 
     private BlockingQueue<Response> qresponses;
@@ -65,8 +66,9 @@ public class ServiceProxy implements IService
             ObjectMapper mapper = new ObjectMapper();
             String request_string = mapper.writeValueAsString(request);
             request_string = request_string + "\n"; // is this even needed?
-            writer.write(request_string);            
-            output.flush();
+            System.out.println("Sending line:" + request_string);
+            writer.println(request_string);            
+            System.out.println("Sent line:" + request_string);            
         } catch (IOException e)
         {
             throw new Exception("Error sending object " + e);
@@ -94,7 +96,7 @@ public class ServiceProxy implements IService
             connection = new Socket(host, port);
             output = connection.getOutputStream();
             output.flush();
-            writer = new BufferedWriter(new OutputStreamWriter(output));            
+            writer = new PrintWriter(output, true);            
             input = connection.getInputStream();
             reader = new BufferedReader(new InputStreamReader(input));            
             
@@ -134,6 +136,7 @@ public class ServiceProxy implements IService
         initializeConnection();
 
         User user = new User(username, password);
+        user.setId(new Long(1));
         Request request = new Request.Builder().type(RequestType.LOGIN).data(user).build();
         sendRequest(request);
         Response response = readResponse();
@@ -265,6 +268,7 @@ public class ServiceProxy implements IService
             {
                 try
                 {
+                    System.out.println("Reading response ");
                     String response_in = reader.readLine();
                     ObjectMapper mapper = new ObjectMapper();
                     Response response = mapper.readValue(response_in, Response.class);
@@ -285,7 +289,7 @@ public class ServiceProxy implements IService
                             e.printStackTrace();
                         }
                     }
-                } catch (IOException | ClassNotFoundException e)
+                } catch (IOException e)
                 {
                     System.out.println("Reading error " + e);
                 }
