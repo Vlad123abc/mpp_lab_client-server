@@ -3,17 +3,26 @@ package org.example.rpcProtocol;
 import org.example.*;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+
 import java.net.Socket;
 import java.util.List;
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ClientWorker implements Runnable, IObserver
 {
     private IService server;
     private Socket connection;
-    private ObjectInputStream input;
-    private ObjectOutputStream output;
+
+    private java.io.InputStream input;
+    private java.io.OutputStream output;
+    private java.io.BufferedReader reader;
+    private java.io.BufferedWriter writer;
+    
     private volatile boolean connected;
     private User user;
 
@@ -24,9 +33,11 @@ public class ClientWorker implements Runnable, IObserver
 
         try
         {
-            output = new ObjectOutputStream(connection.getOutputStream());
+            output = connection.getOutputStream();
             output.flush();
-            input = new ObjectInputStream(connection.getInputStream());
+            writer = new BufferedWriter(new OutputStreamWriter(output));            
+            input = connection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(input));            
             connected = true;
         } catch (IOException e)
         {
@@ -41,7 +52,10 @@ public class ClientWorker implements Runnable, IObserver
         {
             try
             {
-                Object request = input.readObject();
+                String request_in = reader.readLine();
+                ObjectMapper mapper = new ObjectMapper();
+                Request request = mapper.readValue(request_in, Request.class);
+                
                 Response response = handleRequest((Request) request);
                 if (response != null)
                 {
@@ -177,7 +191,10 @@ public class ClientWorker implements Runnable, IObserver
         System.out.println(user.getUsername() + ": sending response " + response);
         synchronized (output)
         {
-            output.writeObject(response);
+            ObjectMapper mapper = new ObjectMapper();
+            String response_string = mapper.writeValueAsString(response);
+            response_string = response_string + "\n"; // is this even needed?
+            writer.write(response_string);
             output.flush();
         }
     }

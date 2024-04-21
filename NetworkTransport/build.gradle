@@ -12,6 +12,7 @@ repositories {
 dependencies {
     implementation project(path: ':ServiceTransport')
     implementation project(path: ':DomainTransport')
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.3'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

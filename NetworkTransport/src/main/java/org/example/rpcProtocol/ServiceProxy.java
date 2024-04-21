@@ -3,13 +3,22 @@ package org.example.rpcProtocol;
 import org.example.*;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 public class ServiceProxy implements IService
 {
@@ -18,8 +27,10 @@ public class ServiceProxy implements IService
 
     private IObserver client;
 
-    private ObjectInputStream input;
-    private ObjectOutputStream output;
+    private java.io.InputStream input;
+    private java.io.OutputStream output;
+    private java.io.BufferedReader reader;
+    private java.io.BufferedWriter writer;
     private Socket connection;
 
     private BlockingQueue<Response> qresponses;
@@ -51,7 +62,10 @@ public class ServiceProxy implements IService
     {
         try
         {
-            output.writeObject(request);
+            ObjectMapper mapper = new ObjectMapper();
+            String request_string = mapper.writeValueAsString(request);
+            request_string = request_string + "\n"; // is this even needed?
+            writer.write(request_string);            
             output.flush();
         } catch (IOException e)
         {
@@ -78,9 +92,12 @@ public class ServiceProxy implements IService
         try
         {
             connection = new Socket(host, port);
-            output = new ObjectOutputStream(connection.getOutputStream());
+            output = connection.getOutputStream();
             output.flush();
-            input = new ObjectInputStream(connection.getInputStream());
+            writer = new BufferedWriter(new OutputStreamWriter(output));            
+            input = connection.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(input));            
+            
             finished = false;
             startReader();
         } catch (IOException e)
@@ -248,7 +265,10 @@ public class ServiceProxy implements IService
             {
                 try
                 {
-                    Object response = input.readObject();
+                    String response_in = reader.readLine();
+                    ObjectMapper mapper = new ObjectMapper();
+                    Response response = mapper.readValue(response_in, Response.class);
+                    
                     System.out.println("response received " + response);
                     if (isUpdate((Response) response))
                     {
