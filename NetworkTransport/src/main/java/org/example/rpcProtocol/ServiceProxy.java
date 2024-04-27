@@ -82,7 +82,8 @@ public class ServiceProxy implements IService
         try
         {
             response = qresponses.take();
-        } catch (InterruptedException e)
+        }
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }
@@ -102,7 +103,8 @@ public class ServiceProxy implements IService
             
             finished = false;
             startReader();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -117,7 +119,8 @@ public class ServiceProxy implements IService
             output.close();
             connection.close();
             client = null;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -136,7 +139,7 @@ public class ServiceProxy implements IService
         initializeConnection();
 
         User user = new User(username, password);
-        user.setId(new Long(1));
+        user.setId(1L);
         Request request = new Request.Builder().type(RequestType.LOGIN).data(user).build();
         sendRequest(request);
         Response response = readResponse();
