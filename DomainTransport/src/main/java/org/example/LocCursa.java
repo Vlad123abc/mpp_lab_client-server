@@ -1,35 +1,52 @@
 package org.example;
 
 import java.io.Serializable;
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.annotation.*;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class LocCursa implements Serializable
 {
-    private Integer nr;
-    private String client;
+    private Integer Item1;
+    private String Item2;
 
+    public LocCursa()
+    {
+    }
+    
     public LocCursa(Integer nr, String client)
     {
-        this.nr = nr;
-        this.client = client;
+        this.Item1 = nr;
+        this.Item2 = client;
     }
 
-    public Integer getNr()
+    @JsonGetter("Item1")
+    public Integer getItem1()
     {
-        return nr;
+        return Item1;
     }
 
-    public void setNr(Integer nr)
+    @JsonSetter("Item1")    
+    public void setItem1(Integer Item1)
     {
-        this.nr = nr;
+        this.Item1 = Item1;
     }
 
-    public String getClient()
+    @JsonGetter("Item2")    
+    public String getItem2()
     {
-        return client;
+        return Item2;
     }
 
-    public void setClient(String client)
+    @JsonSetter("Item2")        
+    public void setItem2(String Item2)
     {
-        this.client = client;
+        this.Item2 = Item2;
     }
 }

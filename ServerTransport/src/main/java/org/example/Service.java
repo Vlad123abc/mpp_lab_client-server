@@ -54,11 +54,11 @@ public class Service implements IService
         return this.cursaRepository.getAll();
     }
 
-    public synchronized List<LocCursa> genereaza_lista_locuri(Long id_cursa)
+    public synchronized List<LocCursa> genereaza_lista_locuri(Cursa cursa)
     {
         List<LocCursa> locuri = new ArrayList<>();
         Integer loc = 1;
-
+        var id_cursa = cursa.getId();
         for (Rezervare rezervare : this.rezervareRepository.getAll())
         {
             if (Objects.equals(rezervare.getId_cursa(), id_cursa))

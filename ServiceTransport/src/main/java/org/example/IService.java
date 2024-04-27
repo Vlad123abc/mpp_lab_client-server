@@ -11,7 +11,7 @@ public interface IService
 
     List<Cursa> getAllCurse() throws Exception;
 
-    List<LocCursa> genereaza_lista_locuri(Long id_cursa) throws Exception;
+    List<LocCursa> genereaza_lista_locuri(Cursa cursa) throws Exception;
 
     Cursa cauta_cursa(String destinatie, Timestamp data) throws Exception;
 

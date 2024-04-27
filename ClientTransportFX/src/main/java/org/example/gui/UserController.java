@@ -112,7 +112,7 @@ public class UserController implements Initializable, IObserver
                 if (cursa == null)
                     MessageWindow.showMessage(null, Alert.AlertType.INFORMATION, "Information", "Nu exista cursa");
                 else
-                    modelLocCurse.setAll(this.service.genereaza_lista_locuri(cursa.getId())); // completare tabel locuri
+                    modelLocCurse.setAll(this.service.genereaza_lista_locuri(cursa)); // completare tabel locuri
             }
             else
                 MessageWindow.showMessage(null, Alert.AlertType.ERROR, "Error", "Introduceti o data!");
@@ -159,8 +159,8 @@ public class UserController implements Initializable, IObserver
         locuriTableColumn.setCellValueFactory(new PropertyValueFactory<>("nr_locuri"));
         cursaTableView.setItems(modelCurse);
 
-        locTableColumn.setCellValueFactory(new PropertyValueFactory<>("nr"));
-        locClientTableColumn.setCellValueFactory(new PropertyValueFactory<>("client"));
+        locTableColumn.setCellValueFactory(new PropertyValueFactory<>("Item1"));
+        locClientTableColumn.setCellValueFactory(new PropertyValueFactory<>("Item2"));
         locCursaTableView.setItems(modelLocCurse);
     }
 

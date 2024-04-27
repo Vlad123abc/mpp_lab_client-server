@@ -162,10 +162,10 @@ public class ClientWorker implements Runnable, IObserver
         if (request.getType() == RequestType.GENEREAZA_LISTA_LOCURI)
         {
             System.out.println(user.getUsername() + ": SendGenereazaListaLocuriRequest ...");
-            Long id_cursa = (Long) request.getData();
+            Cursa cursa = (Cursa) request.getData();
             try
             {
-                List<LocCursa> locuri = server.genereaza_lista_locuri(id_cursa);
+                List<LocCursa> locuri = server.genereaza_lista_locuri(cursa);
                 return new Response.Builder().type(ResponseType.GENEREAZA_LISTA_LOCURI).data(locuri).build();
             } catch (Exception e)
             {

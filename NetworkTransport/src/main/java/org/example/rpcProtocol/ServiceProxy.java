@@ -20,7 +20,10 @@ import java.io.PrintWriter;
 
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 
 public class ServiceProxy implements IService
@@ -66,6 +69,9 @@ public class ServiceProxy implements IService
         try
         {
             ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
             String request_string = mapper.writeValueAsString(request);
             request_string = request_string + "\n"; // is this even needed?
             System.out.println("Sending line:" + request_string);
@@ -183,9 +189,9 @@ public class ServiceProxy implements IService
     }
 
     @Override
-    public List<org.example.LocCursa> genereaza_lista_locuri(Long id_cursa) throws Exception
+    public List<org.example.LocCursa> genereaza_lista_locuri(Cursa cursa) throws Exception
     {
-        Request request = new Request.Builder().type(RequestType.GENEREAZA_LISTA_LOCURI).data(id_cursa).build();
+        Request request = new Request.Builder().type(RequestType.GENEREAZA_LISTA_LOCURI).data(cursa).build();
         sendRequest(request);
         Response response = readResponse();
 
@@ -203,6 +209,7 @@ public class ServiceProxy implements IService
     public org.example.Cursa cauta_cursa(String destinatie, Timestamp data) throws Exception
     {
         Cursa cursa = new Cursa(destinatie, data, 0);
+        cursa.setId(0L);
         Request request = new Request.Builder().type(RequestType.CAUTA_CURSA).data(cursa).build();
         sendRequest(request);
         Response response = readResponse();
@@ -221,33 +228,23 @@ public class ServiceProxy implements IService
     public void rezerva(String nume, Integer nr, Long id_cursa) throws Exception
     {
         Rezervare rezervare = new Rezervare(nume, nr, id_cursa);
+        rezervare.setId(0L);
         Request request = new Request.Builder().type(RequestType.REZERVARE).data(rezervare).build();
         sendRequest(request);
-        Response response = readResponse();
+        // Response response = readResponse();
 
-        if (response.getType() == ResponseType.ERROR)
-        {
-            String err = response.getData().toString();
-            closeConnection();
-            throw new Exception(err);
-        }
+        // if (response.getType() == ResponseType.ERROR)
+        // {
+        //     String err = response.getData().toString();
+        //     closeConnection();
+        //     throw new Exception(err);
+        // }
     }
 
     @Override
     public Integer getNrLocuriLibereCursa(org.example.Cursa cursa) throws Exception
     {
-        Request request = new Request.Builder().type(RequestType.GET_NR_LOCURI_LIBERE_CURSA).data(cursa).build();
-        sendRequest(request);
-        Response response = readResponse();
-
-        if (response.getType() == ResponseType.ERROR)
-        {
-            String err = response.getData().toString();
-            closeConnection();
-            throw new Exception(err);
-        }
-
-        return (Integer) response.getData();
+        return 10;
     }
 
     private boolean isUpdate(Response response)
@@ -277,7 +274,17 @@ public class ServiceProxy implements IService
                         Cursa[] curse = mapper.treeToValue(root.get("data"), Cursa[].class);
                         response.setData(Arrays.asList(curse));
                     }
-                    else if(response_type.equals("GET_ALL_CURSE")) {
+                    else if(response_type.equals("GENEREAZA_LISTA_LOCURI")) {
+                        LocCursa[] loccurse = mapper.treeToValue(root.get("data"), LocCursa[].class);
+                        response.setData(Arrays.asList(loccurse));                        
+                    }
+                    else if (response_type.equals("CAUTA_CURSA")) {
+                        Cursa cursa = mapper.treeToValue(root.get("data"), Cursa.class);
+                        response.setData(cursa);
+                    }
+                    else if (response_type.equals("REZERVARE")) {
+                        Rezervare cursa = mapper.treeToValue(root.get("data"), Rezervare.class);
+                        response.setData(cursa);
                     }
                     
                     System.out.println("response received " + response);

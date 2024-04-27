@@ -8,6 +8,8 @@ public class Rezervare extends Entity<Long>
     private Integer nr_locuri;
     private Long id_cursa;
 
+    public Rezervare() {}    
+
     public Rezervare(String nume_client, Integer nr_locuri, Long id_cursa)
     {
         this.nume_client = nume_client;
