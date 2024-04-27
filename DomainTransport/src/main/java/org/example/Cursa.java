@@ -9,6 +9,8 @@ public class Cursa extends Entity<Long>
     private Timestamp plecare;
     private Integer nr_locuri;
 
+    public Cursa() {}
+    
     public Cursa(String destinatie, Timestamp plecare, Integer nr_locuri)
     {
         this.destinatie = destinatie;

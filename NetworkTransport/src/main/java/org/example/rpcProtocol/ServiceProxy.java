@@ -5,6 +5,7 @@ import org.example.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -19,6 +20,7 @@ import java.io.PrintWriter;
 
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 
 
 public class ServiceProxy implements IService
@@ -160,18 +162,8 @@ public class ServiceProxy implements IService
     @Override
     public org.example.User getUserByUsername(String username) throws Exception
     {
-        Request request = new Request.Builder().type(RequestType.GET_USER_BY_USERNAME).data(username).build();
-        sendRequest(request);
-        Response response = readResponse();
-
-        if (response.getType() == ResponseType.ERROR)
-        {
-            String err = response.getData().toString();
-            closeConnection();
-            throw new Exception(err);
-        }
-
-        return (User) response.getData();
+        User user = new User(username, "nopass");
+        return user;
     }
 
     @Override
@@ -187,7 +179,6 @@ public class ServiceProxy implements IService
             closeConnection();
             throw new Exception(err);
         }
-
         return (List<Cursa>) response.getData();
     }
 
@@ -273,8 +264,21 @@ public class ServiceProxy implements IService
                 {
                     System.out.println("Reading response ");
                     String response_in = reader.readLine();
+                    System.out.println(String.format("Got response string:[%s]",response_in));
+                    String json_in = response_in.replace("\uFEFF", "");
                     ObjectMapper mapper = new ObjectMapper();
-                    Response response = mapper.readValue(response_in, Response.class);
+                    JsonNode root = mapper.readTree(json_in);
+                    String response_type = root.get("type").asText();
+
+                    Response response = mapper.readValue(json_in, Response.class);
+                    System.out.println(String.format("Response type is:[%s]",response_type));
+                    
+                    if (response_type.equals("GET_ALL_CURSE")) {
+                        Cursa[] curse = mapper.treeToValue(root.get("data"), Cursa[].class);
+                        response.setData(Arrays.asList(curse));
+                    }
+                    else if(response_type.equals("GET_ALL_CURSE")) {
+                    }
                     
                     System.out.println("response received " + response);
                     if (isUpdate((Response) response))
@@ -294,7 +298,7 @@ public class ServiceProxy implements IService
                     }
                 } catch (IOException e)
                 {
-                    System.out.println("Reading error " + e);
+                    System.out.println("Reading error " + e.toString());
                 }
             }
         }
