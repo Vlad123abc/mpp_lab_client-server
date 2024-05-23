@@ -1,9 +1,10 @@
 package org.example;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public class Cursa extends Entity<Long>
+public class Cursa extends Entity<Long> implements Comparable<Cursa>, Serializable
 {
     private String destinatie;
     private Timestamp plecare;
@@ -71,5 +72,10 @@ public class Cursa extends Entity<Long>
                 ", nr_locuri=" + nr_locuri +
                 ", id=" + id +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Cursa cursa) {
+        return this.destinatie.compareTo(cursa.getDestinatie());
     }
 }
