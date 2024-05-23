@@ -16,18 +16,18 @@ public class CursaController
 {
     private static final String template = "Hello, %s!";
 
-//    @Autowired
-//    private CursaRepository cursaRepository;
+    @Autowired
+    private CursaRepository cursaRepository;
 
     @RequestMapping("/greeting")
     public  String greeting(@RequestParam(value="name", defaultValue="World") String name) {
         return String.format(template, name);
     }
 
-//    @RequestMapping( method=RequestMethod.GET)
-//    public List<Cursa> getAll()
-//    {
-//        System.out.println("Get all curse ...");
-//        return cursaRepository.getAll();
-//    }
+    @RequestMapping( method=RequestMethod.GET)
+    public List<Cursa> getAll()
+    {
+        System.out.println("Get all curse ...");
+        return cursaRepository.getAll();
+    }
 }
