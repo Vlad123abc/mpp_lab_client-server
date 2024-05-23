@@ -6,4 +6,5 @@ include 'ServerTransport'
 include 'NetworkTransport'
 include 'ClientTransport'
 include 'ClientTransportFX'
+include 'RestServices'
 

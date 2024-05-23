@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'rest'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(path: ':RepositoryTransport')
+    implementation project(path: ':DomainTransport')
+
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.1'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // Remove these redundant dependencies
+    // implementation 'org.springframework.boot:spring-boot-starter'
+    // implementation 'org.springframework:spring-context:5.3.21'
+    // implementation 'org.springframework:spring-web:5.3.21'
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'com.jayway.jsonpath:json-path'
+
+//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    implementation 'com.h2database:h2' // For in-memory database testing
+//
+//    // Add Hibernate dependency for JPA support
+//    implementation 'org.hibernate:hibernate-core:5.6.4.Final'
+}
+
+test {
+    useJUnitPlatform()
+}
