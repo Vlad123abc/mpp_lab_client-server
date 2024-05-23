@@ -3,7 +3,9 @@ package org.example.jdbc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.User;
+import org.example.repository.HibernateUtils;
 import org.example.repository.UtilizatorRepository;
+import org.hibernate.Session;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,64 +29,76 @@ public class UtilizatorDBRepository implements UtilizatorRepository
     @Override
     public User getById(Long Id)
     {
-        logger.traceEntry();
-        Connection con = dbUtils.getConnection();
+//        logger.traceEntry();
+//        Connection con = dbUtils.getConnection();
+//
+//        try(PreparedStatement preStmt = con.prepareStatement("select * from User where user_id = ?"))
+//        {
+//            preStmt.setLong(1, Id);
+//            try(ResultSet resultSet = preStmt.executeQuery())
+//            {
+//                if (resultSet.next())
+//                {
+//                    String username = resultSet.getString("username");
+//                    String password = resultSet.getString("password");
+//                    User user = new User(username, password);
+//                    user.setId(Id);
+//
+//                    logger.traceExit();
+//                    return user;
+//                }
+//            }
+//        }
+//        catch (SQLException e)
+//        {
+//            logger.error(e);
+//            System.err.println("Error DB" + e);
+//        }
+//        return null;
 
-        try(PreparedStatement preStmt = con.prepareStatement("select * from User where user_id = ?"))
+        try (Session session = HibernateUtils.getSessionFactory().openSession())
         {
-            preStmt.setLong(1, Id);
-            try(ResultSet resultSet = preStmt.executeQuery())
-            {
-                if (resultSet.next())
-                {
-                    String username = resultSet.getString("username");
-                    String password = resultSet.getString("password");
-                    User user = new User(username, password);
-                    user.setId(Id);
-
-                    logger.traceExit();
-                    return user;
-                }
-            }
+            return session.createSelectionQuery("from User where user_id=:Id ", User.class)
+                    .setParameter("Id", Id)
+                    .getSingleResultOrNull();
         }
-        catch (SQLException e)
-        {
-            logger.error(e);
-            System.err.println("Error DB" + e);
-        }
-        return null;
     }
 
     @Override
     public List<User> getAll()
     {
-        logger.traceEntry();
-        Connection con = dbUtils.getConnection();
-        List<User> users = new ArrayList<>();
+//        logger.traceEntry();
+//        Connection con = dbUtils.getConnection();
+//        List<User> users = new ArrayList<>();
+//
+//        try(PreparedStatement preStmt = con.prepareStatement("select * from User"))
+//        {
+//            try(ResultSet resultSet = preStmt.executeQuery())
+//            {
+//                while (resultSet.next())
+//                {
+//                    int id_user = resultSet.getInt("user_id");
+//                    String username = resultSet.getString("username");
+//                    String password = resultSet.getString("password");
+//
+//                    User user = new User(username, password);
+//                    user.setId((long) id_user);
+//                    users.add(user);
+//                }
+//            }
+//        }
+//        catch (SQLException e)
+//        {
+//            logger.error(e);
+//            System.err.println("Error DB" + e);
+//        }
+//        logger.traceExit();
+//        return users;
 
-        try(PreparedStatement preStmt = con.prepareStatement("select * from User"))
+        try( Session session= HibernateUtils.getSessionFactory().openSession())
         {
-            try(ResultSet resultSet = preStmt.executeQuery())
-            {
-                while (resultSet.next())
-                {
-                    int id_user = resultSet.getInt("user_id");
-                    String username = resultSet.getString("username");
-                    String password = resultSet.getString("password");
-
-                    User user = new User(username, password);
-                    user.setId((long) id_user);
-                    users.add(user);
-                }
-            }
+            return session.createQuery("from User ", User.class).getResultList();
         }
-        catch (SQLException e)
-        {
-            logger.error(e);
-            System.err.println("Error DB" + e);
-        }
-        logger.traceExit();
-        return users;
     }
 
     @Override
@@ -167,31 +181,38 @@ public class UtilizatorDBRepository implements UtilizatorRepository
     @Override
     public User getByUsername(String username)
     {
-        logger.traceEntry();
-        Connection con = dbUtils.getConnection();
+//        logger.traceEntry();
+//        Connection con = dbUtils.getConnection();
+//
+//        try(PreparedStatement preStmt = con.prepareStatement("select * from User where username = ?"))
+//        {
+//            preStmt.setString(1, username);
+//            try(ResultSet resultSet = preStmt.executeQuery())
+//            {
+//                if (resultSet.next())
+//                {
+//                    Long id = resultSet.getLong("user_id");
+//                    String password = resultSet.getString("password");
+//                    User user = new User(username, password);
+//                    user.setId(id);
+//
+//                    logger.traceExit();
+//                    return user;
+//                }
+//            }
+//        }
+//        catch (SQLException e)
+//        {
+//            logger.error(e);
+//            System.err.println("Error DB" + e);
+//        }
+//        return null;
 
-        try(PreparedStatement preStmt = con.prepareStatement("select * from User where username = ?"))
+        try (Session session = HibernateUtils.getSessionFactory().openSession())
         {
-            preStmt.setString(1, username);
-            try(ResultSet resultSet = preStmt.executeQuery())
-            {
-                if (resultSet.next())
-                {
-                    Long id = resultSet.getLong("user_id");
-                    String password = resultSet.getString("password");
-                    User user = new User(username, password);
-                    user.setId(id);
-
-                    logger.traceExit();
-                    return user;
-                }
-            }
+            return session.createSelectionQuery("from User where username=:username ", User.class)
+                    .setParameter("username", username)
+                    .getSingleResultOrNull();
         }
-        catch (SQLException e)
-        {
-            logger.error(e);
-            System.err.println("Error DB" + e);
-        }
-        return null;
     }
 }

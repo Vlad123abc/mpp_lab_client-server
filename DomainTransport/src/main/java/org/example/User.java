@@ -1,7 +1,17 @@
 package org.example;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import java.lang.annotation.Retention;
 import java.util.Objects;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
+@jakarta.persistence.Entity
+@Table(name = "User")
 public class User extends Entity<Long>
 {
     private String username;
@@ -13,6 +23,9 @@ public class User extends Entity<Long>
         this.password = password;
     }
 
+    public User() {}
+
+    @Column(name = "username")
     public String getUsername()
     {
         return username;
@@ -23,6 +36,7 @@ public class User extends Entity<Long>
         this.username = username;
     }
 
+    @Column(name = "password")
     public String getPassword()
     {
         return password;
@@ -57,5 +71,20 @@ public class User extends Entity<Long>
                 ", password='" + password + '\'' +
                 ", id=" + id +
                 '}';
+    }
+
+    @Id
+    @GeneratedValue(generator = "increment")
+    @Override
+    @Column(name = "user_id")
+    public Long getId()
+    {
+        return this.id;
+    }
+
+    @Override
+    public void setId(Long id)
+    {
+        this.id = id;
     }
 }
