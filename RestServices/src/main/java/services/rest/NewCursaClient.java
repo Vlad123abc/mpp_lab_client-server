@@ -12,12 +12,14 @@ import org.springframework.web.client.RestClient;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 public class NewCursaClient {
     RestClient restClient = RestClient.builder().
             requestInterceptor(new CustomRestClientInterceptor()).
             build();
 
-    public static final String URL = "http://localhost:8080/chat/users";
+    public static final String URL = "http://localhost:8080/transport/curse";
 
     private <T> T execute(Callable<T> callable) throws Exception {
         try {
@@ -31,6 +33,22 @@ public class NewCursaClient {
 
     public Cursa[] getAll() throws Exception {
         return execute(() -> restClient.get().uri(URL).retrieve().body(Cursa[].class));
+    }
+
+    public Cursa getById(String id) throws Exception {
+        return execute(() -> restClient.get(). uri(String.format("%s/%s", URL, id)).retrieve().body( Cursa.class));
+    }
+
+    public Cursa create(Cursa cursa) throws Exception {
+        return execute(() -> restClient.post().uri(URL).contentType(APPLICATION_JSON).body(cursa).retrieve().body(Cursa.class));
+    }
+
+    public Cursa update(Cursa cursa) throws Exception {
+        return execute(() -> restClient.put().uri(URL).contentType(APPLICATION_JSON).body(cursa).retrieve().body(Cursa.class));
+    }
+
+    public void delete(String id) throws Exception {
+        execute(() -> restClient.delete().uri(String.format("%s/%s", URL, id)).retrieve().toBodilessEntity());
     }
 
     public class CustomRestClientInterceptor implements ClientHttpRequestInterceptor {
