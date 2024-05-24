@@ -17,6 +17,9 @@ public class Cursa extends Entity<Long> implements Comparable<Cursa>, Serializab
         this.nr_locuri = nr_locuri;
     }
 
+    public Cursa() {
+    }
+
     public String getDestinatie()
     {
         return destinatie;
