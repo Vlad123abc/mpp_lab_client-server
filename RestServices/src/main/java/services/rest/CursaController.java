@@ -65,4 +65,11 @@ public class CursaController
             return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
+
+    @RequestMapping("/max_id")
+    public Long getMaxId()
+    {
+        System.out.println("Get max id ...");
+        return cursaRepository.getMaxId();
+    }
 }

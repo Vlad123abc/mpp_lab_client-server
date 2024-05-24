@@ -51,6 +51,10 @@ public class NewCursaClient {
         execute(() -> restClient.delete().uri(String.format("%s/%s", URL, id)).retrieve().toBodilessEntity());
     }
 
+    public Long getMaxId() throws Exception {
+        return execute(() -> restClient.get().uri(String.format("%s/%s", URL, "max_id")).retrieve().body(Long.class));
+    }
+
     public class CustomRestClientInterceptor implements ClientHttpRequestInterceptor {
         @Override
         public ClientHttpResponse intercept(

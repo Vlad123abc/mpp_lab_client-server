@@ -24,6 +24,8 @@ public class NewRestClient {
                 }
             });
 
+
+
             System.out.println("\nPrinting all curse ...");
             show(()->{
                 Cursa[] res = new Cursa[0];
@@ -36,6 +38,23 @@ public class NewRestClient {
                 }
                 for(Cursa c : res){
                     System.out.println(c.getId()+": " + c.getDestinatie());
+                }
+            });
+        }catch(RestClientException ex){
+            System.out.println("Exception ... " + ex.getMessage());
+        }
+
+        try{
+            System.out.println("Get max id curse");
+            show(()-> {
+                try
+                {
+                    Long id = cursaClient.getMaxId();
+                    System.out.println("max id: " + id);
+                    cursa.setId(id);
+                } catch (Exception e)
+                {
+                    throw new RuntimeException(e);
                 }
             });
         }catch(RestClientException ex){
